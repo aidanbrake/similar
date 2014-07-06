@@ -1,0 +1,75 @@
+{
+  "name": "Cortexica search",
+  "manifest_version": 2,
+  "description": "Search similar fashion.",
+  "version": "0.1",
+  "background": {
+    "scripts": ["js/background.js"],
+	"persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*", "file:///*"],
+      "js": [
+            "js/jquery-1.10.2.min.js",
+            "js/jquery.ui.js",
+        		"js/common.js",
+        		"js/dynamicdiv.js",
+        		"js/jquery.klass.js",
+        		"js/jquery.ui.js",
+        		"js/zoomer.js",
+        		"js/start.js",
+            "js/jquery.bxslider.min.js",
+            "js/jquery.imgareaselect.min.js",
+            "js/searchbox.js"
+
+	  ],
+      "run_at": "document_idle",
+      "all_frames": true
+    }
+  ],
+  
+  "web_accessible_resources": [
+      //  For scripts
+  	  "js/jquery-1.10.2.min.map",
+
+      //  For stylesheets
+      "css/myStyle.css",
+      "css/imgareaselect-animated.css",
+      "css/imgareaselect-default.css",
+      "css/imgareaselect-deprecated.css",
+      "css/dynamicdiv.css",
+      "css/jquery.bxslider.css",
+
+      "css/fonts/bebas-webfont.eot",
+      "css/fonts/bebas-webfont.svg",
+      "css/fonts/bebas-webfont.ttf",
+      "css/fonts/bebas-webfont.woff",
+
+      //  For images and icons
+      "images/loading7.gif",
+      "images/logo.png",
+      "images/loadingContainerImage.gif",
+      "images/loadingContainerLogo.png",
+      "images/close-button-bg.gif",
+      "css/images/toolbar-search-bg.png",
+      "css/images/toolbar-crop-bg.png",
+      "css/images/toolbar-info-bg.png",
+      "css/images/close-button-icon.png",
+      "css/images/sliderButtonIcon.gif",
+      "css/border-h.gif",
+      "css/border-v.gif",
+      "css/border-anim-h.gif",
+      "css/border-anim-v.gif",
+      "css/images/loading-dress.png",
+      "css/images/loading-logo.png",
+      "css/images/search-bkg.png",
+      "css/images/left-arrow.png",
+      "css/images/right-arrow.png",
+      "css/images/icon-link-white.png"
+  ],
+	"permissions": [
+    "http://*/"
+  ]
+}
+
