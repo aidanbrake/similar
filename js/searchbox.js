@@ -203,7 +203,9 @@ var Searchbox = $.klass({
 
 							var tempItemNameText = $(this).find('img').attr('name');
 							$('.hover-state label')
-									.text((tempItemNameText.length > 30) ? (tempItemNameText.substr(0, 27) + "...") : tempItemNameText)
+									.text((tempItemNameText == null)
+											? "Untitled"
+											: (tempItemNameText.length > 30) ? (tempItemNameText.substr(0, 27) + "...") : tempItemNameText)
 									.attr({
 										'title' : tempItemNameText
 									});
@@ -671,7 +673,7 @@ var Searchbox = $.klass({
 				}
 			}
 
-			categorySelect.val(self.getCurrentCategory().id).change();
+			closeupDivCategorySelect.val(self.getCurrentCategory().id).change();
 
 			var getItems = function(className) {
 				var result = [];
@@ -794,6 +796,7 @@ var Searchbox = $.klass({
 
 				for(var i = 0; i < self.gridItems.length; i++) {
 					var curItem = self.items[i];
+					curItem.removeClass('active');
 					if ( curItem.hasClass(itemClassName) )
 						closeupResult.push(curItem);
 				}
@@ -805,6 +808,23 @@ var Searchbox = $.klass({
 				slider = $(document.createElement('ul')).addClass('bxslider');
 				slider.append(closeupResult);
 				slideShow2.append(slider);
+
+				//	Initializing hover state ...
+					$('.hover-state a').attr({'href': closeupResult[0].find('img').attr('href')});
+					$('#cycle-1 img').attr('src', closeupResult[0].find('img').attr('src'));
+					$('.hover-state label').text(closeupResult[0].find('img').attr('title'));
+
+					var tempItemNameText = closeupResult[0].find('img').attr('name');
+					$('.hover-state label')
+							.text((tempItemNameText == null)
+								? "Empty"
+								: (tempItemNameText.length > 30) ? (tempItemNameText.substr(0, 27) + "...") : tempItemNameText)
+							.attr({
+								'title' : tempItemNameText
+							});
+
+					closeupResult[0].addClass('active');
+				//-----------------------------
 
 				$('.bxslider li').click(function() {
 					event.preventDefault();
@@ -827,7 +847,7 @@ var Searchbox = $.klass({
 								'title' : tempItemNameText
 							});
 
-					gridDivCategorySelect.val(self.getCurrentCategory().id).change();
+					
 				});
 
 				jQuery(document).ready(function($){
@@ -852,6 +872,8 @@ var Searchbox = $.klass({
 
 				if ($('a.bx-next')[0] != undefined)
 					$('a.bx-next')[0].remove();
+
+				gridDivCategorySelect.val(self.getCurrentCategory().id);
 			});
 
   			gridDivCategorySelect.change(function() {
@@ -882,7 +904,7 @@ var Searchbox = $.klass({
 						});
 				}
 
-				categorySelect.val(self.getCurrentCategory().id).change();
+				closeupDivCategorySelect.val(self.getCurrentCategory().id);
 			});
 		//
 
@@ -952,6 +974,8 @@ var Searchbox = $.klass({
 						var opt = "<option value='" + self.options.categories[0].value[i].id+"'>"+self.options.categories[0].value[i].value+"</option>"
 						$('#gridViewCategorySelect').append(opt);
 					};
+
+					$('input#closeup-men').click();
 				}
 				else
 				{
@@ -960,7 +984,10 @@ var Searchbox = $.klass({
 						var opt = "<option value='" + self.options.categories[1].value[i].id + "'>"+self.options.categories[1].value[i].value+"</option>"
 						$('#gridViewCategorySelect').append(opt);
 					};
+
+					$('input#closeup-women').click();
 				}
+
 				$('#gridViewCategorySelect').change();
 				self.initGridList();
 			});
@@ -972,6 +999,8 @@ var Searchbox = $.klass({
 						var opt= "<option value='" + self.options.categories[0].value[i].id + "'>" + self.options.categories[0].value[i].value+"</option>"
 						$('#closeupViewCategorySelect').append(opt);
 					};
+
+					$('input#grid-men').click();
 				}
 				else
 				{
@@ -980,6 +1009,8 @@ var Searchbox = $.klass({
 						var opt = "<option value='" + self.options.categories[1].value[i].id + "'>" + self.options.categories[1].value[i].value+"</option>"
 						$('#closeupViewCategorySelect').append(opt);
 					};
+
+					$('input#grid-women').click();
 				}
 				$('#closeupViewCategorySelect').change();
 				self.initCarousel(true);
