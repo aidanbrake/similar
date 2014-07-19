@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title>Cortexica Options</title>
+	<link href="css/options.css" rel="stylesheet">
+	<script src="js/jquery-1.10.2.min.js"></script>
+	<script src="js/config.js"></script>
+	<script src="js/options.js"></script>
+</head>
+
+<body data-page="stations">
+	<div id="wrapper">
+		<div id="logo-container">
+			<a href="" class="logo-link">
+				<img src="images/loading-logo.png" class="logo" />
+			</a>
+		</div>
+		<div id="content">
+			<h4 id="title">General Options</h4>
+			<table id="values">
+				<tr>
+					<td class="description">Enter API Key: </td>
+					<td class="value apiKey" colSpan="5"><input type="text" id="apiKey" placeholder="Enter API Key if you have another..." /></td>
+				</tr>
+				<tr>
+					<td class="description">Enable Gender Dropdown: </td>
+					<td><input type="checkbox" id="genderDropdownFlag" /></td>
+				</tr>
+				<tr class="removeable">
+					<td class="categoryValue">Category Value: </td>
+					<td class="value"><input type="text" class="categoryValue" placeholder="Category Value" /></td>
+					<td class="categoryID">Category ID: </td>
+					<td class="value"><input type="text" class="categoryValue" placeholder="Category Value" /></td>
+					<td class="genderDescription">Select Gender: </td>
+					<td class="gender">
+						<input type="radio" name="gender1" value="women" id="women1" />
+						<label for="women1" >Women</label>
+						<input type="radio" name="gender1" value="men" id="men1" />
+						<label for="men1" >Men</label>
+					</td>
+					<td class="action"><h6 class="actionRemove">Remove Category</h6></td>
+				</tr>
+				<tr class="removeable">
+					<td class="categoryValue">Category Value: </td>
+					<td class="value"><input type="text" class="categoryValue" placeholder="Category Value" /></td>
+					<td class="categoryID">Category ID: </td>
+					<td class="value"><input type="text" class="categoryValue" placeholder="Category Value" /></td>
+					<td class="genderDescription">Select Gender: </td>
+					<td class="gender">
+						<input type="radio" name="gender2" value="women" id="women2" />
+						<label for="women2" >Women</label>
+						<input type="radio" name="gender2" value="men" id="men2" />
+						<label for="men2" >Men</label>
+					</td>
+					<td class="action"><h6 class="actionRemove">Remove Category</h6></td>
+				</tr>
+				<tr class="removeable">
+					<td class="categoryValue">Category Value: </td>
+					<td class="value"><input type="text" class="categoryValue" placeholder="Category Value" /></td>
+					<td class="categoryID">Category ID: </td>
+					<td class="value"><input type="text" class="categoryValue" placeholder="Category Value" /></td>
+					<td class="genderDescription">Select Gender: </td>
+					<td class="gender">
+						<input type="radio" name="gender3" value="women" id="women3" />
+						<label for="women3" >Women</label>
+						<input type="radio" name="gender3" value="men" id="men3" />
+						<label for="men3" >Men</label>
+					</td>
+					<td class="action"><h6 class="actionRemove">Remove Category</h6></td>
+				</tr>
+			</table>
+			<div class="addLinkContainer">
+				<h6 id="addMoreCategory" >Add a category</h6>
+			</div>
+			<div class="controllerContainer">
+				<input type="button" id="btnRestore" value="Restore default" />
+				<input type="button" id="btnSave" value="Save changes" />
+			</div>
+		</div>
+	</div>
+</body>
+</html>

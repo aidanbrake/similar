@@ -7,6 +7,7 @@
     "scripts": ["js/background.js"],
 	"persistent": false
   },
+  "options_page": "options.html",
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*", "file:///*"],
@@ -18,6 +19,7 @@
         		"js/jquery.klass.js",
         		"js/jquery.ui.js",
         		"js/zoomer.js",
+            "js/config.js",
         		"js/start.js",
             "js/jquery.bxslider.min.js",
             "js/jquery.imgareaselect.min.js",
