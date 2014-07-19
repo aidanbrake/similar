@@ -312,8 +312,10 @@
               margin-top: 10%;
               margin-bottom: 10%;
               overflow: hidden;
+              font-size: 8px;
+              line-height: 10px;
               color: white;
-              height: 30%;}
+              height: 45%;}
             .cortexicaDialogWindow .results .item-found-gridview ul.item-found-grid-container li > div > a > span {
               background: url(images/icon-link-white.png);
               width: 30px;
@@ -325,6 +327,7 @@
 
       .cortexicaDialogWindow .results .item-found-gridview div.item-found-gridview-controls {
         font-size: 15px;
+        height: 20px;
         font-weight: normal;
         font-family: bebasthin;}
         .cortexicaDialogWindow .results .item-found-gridview div.item-found-gridview-controls label {

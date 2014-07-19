@@ -24,6 +24,7 @@ var Searchbox = $.klass({
 	dialogWindow:null,
 	zoomWindow:null,
 	initialized:false,
+	genderOptionFlag:false,
 	currentViewOption: "grid",
 	currentCategory: null,
 	currentIndexOfCategory:0,
@@ -60,6 +61,9 @@ var Searchbox = $.klass({
 				}
 			}
 		}
+
+		if (this.options.genderOptionFlag === undefined)
+			this.options.genderOptionFlag = false;
 
 		if (this.currentCategory == null) this.options.categories[0].value[0];
 	},
@@ -156,7 +160,9 @@ var Searchbox = $.klass({
 
 					var tempItemNameText = result[0].find('img').attr('name');
 					$('.hover-state label')
-							.text((tempItemNameText.length > 30) ? (tempItemNameText.substr(0, 27) + "...") : tempItemNameText)
+							.text((tempItemNameText == null)
+								? "Empty"
+								: (tempItemNameText.length > 30) ? (tempItemNameText.substr(0, 27) + "...") : tempItemNameText)
 							.attr({
 								'title' : tempItemNameText
 							});
@@ -197,7 +203,9 @@ var Searchbox = $.klass({
 
 							var tempItemNameText = $(this).find('img').attr('name');
 							$('.hover-state label')
-									.text((tempItemNameText.length > 30) ? (tempItemNameText.substr(0, 27) + "...") : tempItemNameText)
+									.text((tempItemNameText == null)
+											? "Untitled"
+											: (tempItemNameText.length > 30) ? (tempItemNameText.substr(0, 27) + "...") : tempItemNameText)
 									.attr({
 										'title' : tempItemNameText
 									});
@@ -567,7 +575,7 @@ var Searchbox = $.klass({
 				div1 = $(document.createElement('div')).addClass('hover-state'),
 				label1 = $(document.createElement('label')),
 				a1 = $(document.createElement('a')).addClass('btn').text('Visit Website').attr({'target': '_blank', 'href': '#'}),
-
+				itemFoundCloseupDivgenderCaption = $(document.createElement('label')).addClass('gender-caption').text('Show'),
 				itemFoundCloseupDivControlsContainer = $(document.createElement('div')).addClass('item-found-closeup-controls'),
 				itemFoundCloseupDivGenderWomen = $(document.createElement('input')).attr({
 																					'id' : 'closeup-women',
@@ -636,21 +644,36 @@ var Searchbox = $.klass({
 			slideShow2.append(pager2);
 			///////////////////
 
-			if ( self.getGenderFromCategory(self.getCurrentCategory()) == 'women') {
-				itemFoundCloseupDivGenderWomen.attr('checked', true);
-				for (var i = 0; i < self.options.categories[1].value.length; i++){
-					var opt = "<option value='" + self.options.categories[1].value[i].id+"'>"+self.options.categories[1].value[i].value+"</option>"
-					closeupDivCategorySelect.append(opt);
+			if (self.options.genderOptionFlag) {
+				if ( self.getGenderFromCategory(self.getCurrentCategory()) == 'women') {
+					itemFoundCloseupDivGenderWomen.attr('checked', true);
+					for (var i = 0; i < self.options.categories[1].value.length; i++){
+						var opt = "<option value='" + self.options.categories[1].value[i].id+"'>"+self.options.categories[1].value[i].value+"</option>"
+						closeupDivCategorySelect.append(opt);
+					}
+				} else {
+					itemFoundCloseupDivGenderMen.attr('checked', true);
+					for (var i = 0; i < self.options.categories[0].value.length; i++){
+						var opt = "<option value='" + self.options.categories[0].value[i].id+"'>"+self.options.categories[0].value[i].value+"</option>"
+						closeupDivCategorySelect.append(opt);
+					}
 				}
-			} else {
-				itemFoundCloseupDivGenderMen.attr('checked', true);
-				for (var i = 0; i < self.options.categories[0].value.length; i++){
-					var opt = "<option value='" + self.options.categories[0].value[i].id+"'>"+self.options.categories[0].value[i].value+"</option>"
-					closeupDivCategorySelect.append(opt);
+			}else {
+				itemFoundCloseupDivgenderCaption.hide();
+				itemFoundCloseupDivGenderWomen.hide();
+				itemFoundCloseupDivGenderWomenLabel.hide();
+				itemFoundCloseupDivGenderMen.hide();
+				itemFoundCloseupDivGenderMenLabel.hide();
+
+				for (var j = 0; j < self.options.categories.length; j++) {
+					for (var i = 0; i < self.options.categories[1].value.length; i++){
+						var opt = "<option value='" + self.options.categories[j].value[i].id+"'>"+self.options.categories[j].value[i].value+"</option>"
+						closeupDivCategorySelect.append(opt);
+					}
 				}
 			}
 
-			categorySelect.val(self.getCurrentCategory().id).change();
+			closeupDivCategorySelect.val(self.getCurrentCategory().id).change();
 
 			var getItems = function(className) {
 				var result = [];
@@ -673,12 +696,12 @@ var Searchbox = $.klass({
 
 				return result;
 			}
-			itemFoundCloseupDivControlsContainer.append($(document.createElement('label')).addClass('gender-caption').text('Show'),
-													 itemFoundCloseupDivGenderWomen,
-													 itemFoundCloseupDivGenderWomenLabel,
-													 itemFoundCloseupDivGenderMen,
-													 itemFoundCloseupDivGenderMenLabel,
-													 closeupDivCategorySelect);
+			itemFoundCloseupDivControlsContainer.append(itemFoundCloseupDivgenderCaption,
+														itemFoundCloseupDivGenderWomen,
+														itemFoundCloseupDivGenderWomenLabel,
+														itemFoundCloseupDivGenderMen,
+														itemFoundCloseupDivGenderMenLabel,
+														closeupDivCategorySelect);
 			itemFoundDiv.append(itemFoundCloseupDivControlsContainer);
 
 
@@ -698,6 +721,7 @@ var Searchbox = $.klass({
 			var itemFoundGridDiv = $(document.createElement('div')).addClass('item-found-gridview'),//.hide(),
 				itemFoundGridContainerUl = $(document.createElement('ul')).addClass('item-found-grid-container'),
 				itemFoundGridDivControlsContainer = $(document.createElement('div')).addClass('item-found-gridview-controls'),
+				itemFoundGridDivGenderCaption = $(document.createElement('label')).addClass('gender-caption').text('Show'),
 				itemFoundGridDivGenderWomen = $(document.createElement('input')).attr({
 																					'id' : 'grid-women',
 																					'value' : 'women',
@@ -717,23 +741,38 @@ var Searchbox = $.klass({
 				gridDivCategorySelect = $('<select/>', {'id': 'gridViewCategorySelect', 'class':'categorySelect'}),
 				gridDivLogo = $(document.createElement('a')).addClass('logo').attr({'href':'http://www.cortexica.com/', 'target':'_blank'});
 
-			if ( self.getGenderFromCategory(self.getCurrentCategory()) == 'women') {
-				itemFoundGridDivGenderWomen.attr('checked', true);
-				for (var i = 0; i < self.options.categories[1].value.length; i++){
-					var opt = "<option value='" + self.options.categories[1].value[i].id+"'>"+self.options.categories[1].value[i].value+"</option>"
-					gridDivCategorySelect.append(opt);
+			if (self.options.genderOptionFlag) {
+				if ( self.getGenderFromCategory(self.getCurrentCategory()) == 'women') {
+					itemFoundGridDivGenderWomen.attr('checked', true);
+					for (var i = 0; i < self.options.categories[1].value.length; i++){
+						var opt = "<option value='" + self.options.categories[1].value[i].id+"'>"+self.options.categories[1].value[i].value+"</option>"
+						gridDivCategorySelect.append(opt);
+					}
+				} else {
+					itemFoundGridDivGenderMen.attr('checked', true);
+					for (var i = 0; i < self.options.categories[0].value.length; i++){
+						var opt = "<option value='" + self.options.categories[0].value[i].id+"'>"+self.options.categories[0].value[i].value+"</option>"
+						gridDivCategorySelect.append(opt);
+					}
 				}
 			} else {
-				itemFoundGridDivGenderMen.attr('checked', true);
-				for (var i = 0; i < self.options.categories[0].value.length; i++){
-					var opt = "<option value='" + self.options.categories[0].value[i].id+"'>"+self.options.categories[0].value[i].value+"</option>"
-					gridDivCategorySelect.append(opt);
+				itemFoundGridDivGenderCaption.hide();
+				itemFoundGridDivGenderWomen.hide();
+				itemFoundGridDivGenderWomenLabel.hide();
+				itemFoundGridDivGenderMen.hide();
+				itemFoundGridDivGenderMenLabel.hide();
+
+				for (var j = 0; j < self.options.categories.length; j++) {
+					for (var i = 0; i < self.options.categories[j].value.length; i++){
+						var opt = "<option value='" + self.options.categories[j].value[i].id+"'>"+self.options.categories[j].value[i].value+"</option>"
+						gridDivCategorySelect.append(opt);
+					}
 				}
 			}
 
 			gridDivCategorySelect.val(self.getCurrentCategory().id).change();
 
-			itemFoundGridDivControlsContainer.append($(document.createElement('label')).addClass('gender-caption').text('Show'),
+			itemFoundGridDivControlsContainer.append(itemFoundGridDivGenderCaption,
 													 itemFoundGridDivGenderWomen,
 													 itemFoundGridDivGenderWomenLabel,
 													 itemFoundGridDivGenderMen,
@@ -757,6 +796,7 @@ var Searchbox = $.klass({
 
 				for(var i = 0; i < self.gridItems.length; i++) {
 					var curItem = self.items[i];
+					curItem.removeClass('active');
 					if ( curItem.hasClass(itemClassName) )
 						closeupResult.push(curItem);
 				}
@@ -768,6 +808,23 @@ var Searchbox = $.klass({
 				slider = $(document.createElement('ul')).addClass('bxslider');
 				slider.append(closeupResult);
 				slideShow2.append(slider);
+
+				//	Initializing hover state ...
+					$('.hover-state a').attr({'href': closeupResult[0].find('img').attr('href')});
+					$('#cycle-1 img').attr('src', closeupResult[0].find('img').attr('src'));
+					$('.hover-state label').text(closeupResult[0].find('img').attr('title'));
+
+					var tempItemNameText = closeupResult[0].find('img').attr('name');
+					$('.hover-state label')
+							.text((tempItemNameText == null)
+								? "Empty"
+								: (tempItemNameText.length > 30) ? (tempItemNameText.substr(0, 27) + "...") : tempItemNameText)
+							.attr({
+								'title' : tempItemNameText
+							});
+
+					closeupResult[0].addClass('active');
+				//-----------------------------
 
 				$('.bxslider li').click(function() {
 					event.preventDefault();
@@ -790,7 +847,7 @@ var Searchbox = $.klass({
 								'title' : tempItemNameText
 							});
 
-					gridDivCategorySelect.val(self.getCurrentCategory().id).change();
+					
 				});
 
 				jQuery(document).ready(function($){
@@ -815,6 +872,8 @@ var Searchbox = $.klass({
 
 				if ($('a.bx-next')[0] != undefined)
 					$('a.bx-next')[0].remove();
+
+				gridDivCategorySelect.val(self.getCurrentCategory().id);
 			});
 
   			gridDivCategorySelect.change(function() {
@@ -845,7 +904,7 @@ var Searchbox = $.klass({
 						});
 				}
 
-				categorySelect.val(self.getCurrentCategory().id).change();
+				closeupDivCategorySelect.val(self.getCurrentCategory().id);
 			});
 		//
 
@@ -915,6 +974,8 @@ var Searchbox = $.klass({
 						var opt = "<option value='" + self.options.categories[0].value[i].id+"'>"+self.options.categories[0].value[i].value+"</option>"
 						$('#gridViewCategorySelect').append(opt);
 					};
+
+					$('input#closeup-men').click();
 				}
 				else
 				{
@@ -923,7 +984,10 @@ var Searchbox = $.klass({
 						var opt = "<option value='" + self.options.categories[1].value[i].id + "'>"+self.options.categories[1].value[i].value+"</option>"
 						$('#gridViewCategorySelect').append(opt);
 					};
+
+					$('input#closeup-women').click();
 				}
+
 				$('#gridViewCategorySelect').change();
 				self.initGridList();
 			});
@@ -935,6 +999,8 @@ var Searchbox = $.klass({
 						var opt= "<option value='" + self.options.categories[0].value[i].id + "'>" + self.options.categories[0].value[i].value+"</option>"
 						$('#closeupViewCategorySelect').append(opt);
 					};
+
+					$('input#grid-men').click();
 				}
 				else
 				{
@@ -943,6 +1009,8 @@ var Searchbox = $.klass({
 						var opt = "<option value='" + self.options.categories[1].value[i].id + "'>" + self.options.categories[1].value[i].value+"</option>"
 						$('#closeupViewCategorySelect').append(opt);
 					};
+
+					$('input#grid-women').click();
 				}
 				$('#closeupViewCategorySelect').change();
 				self.initCarousel(true);
@@ -1033,7 +1101,7 @@ var Searchbox = $.klass({
 										.append(
 												$(document.createElement('h6'))
 														.addClass('gridItem-title')
-														.text(data[i].title.length > 20 ? data[i].title : data[i].title.substr(0, 27) + "..."),
+														.text((data[i].title != null && data[i].title.length > 20) ? data[i].title.substr(0, 27) + "..." : ""),
 
 												$(document.createElement('a'))
 														.addClass('gridItem-link')

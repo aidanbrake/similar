@@ -29,3 +29,11 @@ chrome.runtime.onMessage.addListener(
 		return false;
 	}
 });
+
+chrome.runtime.onInstalled.addListener(function(details) {
+	if ( details.reason === 'install' || details.reason === 'update' ) {
+		chrome.tabs.create({
+			url: chrome.extension.getURL("options.html")
+		});
+	}
+})
