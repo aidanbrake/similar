@@ -31,6 +31,7 @@ var Searchbox = $.klass({
 	init: function( options ) {
 
 		this.options = options
+		this.updateFromLocalStorage();
 		
 		this.options.debug==(this.options.debug===undefined?false:this.options.debug)
 
@@ -67,6 +68,16 @@ var Searchbox = $.klass({
 
 		if (this.currentCategory == null) this.options.categories[0].value[0];
 	},
+
+	updateFromLocalStorage: function() {
+		var self = this;
+		chrome.runtime.sendMessage({method: "getOptionData"}, function(response) {
+			self.options.categories = response.categories || options.categories
+			self.options.apiKey = response.apiKey || options.key
+			self.options.genderOptionFlag = response.genderOption || options.genderOptionFlag
+		});
+	},
+
 	logger:function (text){
 		if (this.options.debug){
 			if (arguments.length>1)
@@ -534,7 +545,9 @@ var Searchbox = $.klass({
 			if (e.keyCode==27){
 				self.clearWindows()
 			} 
-		});	
+		});
+
+		this.updateFromLocalStorage();
 
 		self.loadingContainer = $(document.createElement('section'));
 		self.loadingContainer.addClass("loader hidden left");
@@ -644,7 +657,7 @@ var Searchbox = $.klass({
 			slideShow2.append(pager2);
 			///////////////////
 
-			if (self.options.genderOptionFlag) {
+			if (self.options.genderOptionFlag == "true" || self.options.genderOptionFlag) {
 				if ( self.getGenderFromCategory(self.getCurrentCategory()) == 'women') {
 					itemFoundCloseupDivGenderWomen.attr('checked', true);
 					for (var i = 0; i < self.options.categories[1].value.length; i++){
@@ -741,7 +754,7 @@ var Searchbox = $.klass({
 				gridDivCategorySelect = $('<select/>', {'id': 'gridViewCategorySelect', 'class':'categorySelect'}),
 				gridDivLogo = $(document.createElement('a')).addClass('logo').attr({'href':'http://www.cortexica.com/', 'target':'_blank'});
 
-			if (self.options.genderOptionFlag) {
+			if (self.options.genderOptionFlag == "true" || self.options.genderOptionFlag) {
 				if ( self.getGenderFromCategory(self.getCurrentCategory()) == 'women') {
 					itemFoundGridDivGenderWomen.attr('checked', true);
 					for (var i = 0; i < self.options.categories[1].value.length; i++){
@@ -810,20 +823,22 @@ var Searchbox = $.klass({
 				slideShow2.append(slider);
 
 				//	Initializing hover state ...
-					$('.hover-state a').attr({'href': closeupResult[0].find('img').attr('href')});
-					$('#cycle-1 img').attr('src', closeupResult[0].find('img').attr('src'));
-					$('.hover-state label').text(closeupResult[0].find('img').attr('title'));
+					if (closeupResult.length > 0){
+						$('.hover-state a').attr({'href': closeupResult[0].find('img').attr('href')});
+						$('#cycle-1 img').attr('src', closeupResult[0].find('img').attr('src'));
+						$('.hover-state label').text(closeupResult[0].find('img').attr('title'));
 
-					var tempItemNameText = closeupResult[0].find('img').attr('name');
-					$('.hover-state label')
-							.text((tempItemNameText == null)
-								? "Empty"
-								: (tempItemNameText.length > 30) ? (tempItemNameText.substr(0, 27) + "...") : tempItemNameText)
-							.attr({
-								'title' : tempItemNameText
-							});
+						var tempItemNameText = closeupResult[0].find('img').attr('name');
+						$('.hover-state label')
+								.text((tempItemNameText == null)
+									? "Empty"
+									: (tempItemNameText.length > 30) ? (tempItemNameText.substr(0, 27) + "...") : tempItemNameText)
+								.attr({
+									'title' : tempItemNameText
+								});
 
-					closeupResult[0].addClass('active');
+						closeupResult[0].addClass('active');
+					}
 				//-----------------------------
 
 				$('.bxslider li').click(function() {

@@ -22,10 +22,15 @@ chrome.runtime.onMessage.addListener(
     if (request.name == "toDataURL"){
 		var data=adjustImage(request.url,sendResponse);
 		return true
-	}else if (request.name == "noChanges"){
+	} else if (request.name == "noChanges"){
 		var data = request.dataURL;
 		return true;
-	}else {
+	} else if (request.method == "getOptionData") {
+		sendResponse({
+			apiKey: localStorage.getItem("apiKey"),
+			genderOption: localStorage.getItem("genderOption"),
+			categories: JSON.parse(localStorage.getItem("categories"))});
+	} else {
 		return false;
 	}
 });
