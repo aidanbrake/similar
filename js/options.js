@@ -5,14 +5,17 @@
 		this.categories = JSON.parse(localStorage.getItem("categories")) || globalOptions.categories;
 		this.apiKey = localStorage.getItem("apiKey") || globalOptions.key;
 		this.genderDropdownFlag = localStorage.getItem("genderOption") || globalOptions.genderOptionFlag;
-
 	}
 
 	Option.prototype = {
 		init: function() {
-			localStorage.setItem("apiKey", globalOptions.key);
-			localStorage.setItem("categories", JSON.stringify(globalOptions.categories));
-			localStorage.setItem("genderOption", globalOptions.genderOptionFlag);
+			// localStorage.setItem("apiKey", globalOptions.key);
+			// localStorage.setItem("categories", JSON.stringify(globalOptions.categories));
+			// localStorage.setItem("genderOption", globalOptions.genderOptionFlag);
+
+			this.categories = JSON.parse(localStorage.getItem("categories")) || globalOptions.categories;
+			this.apiKey = localStorage.getItem("apiKey") || globalOptions.key;
+			this.genderDropdownFlag = localStorage.getItem("genderOption") || globalOptions.genderOptionFlag;
 			this.initEvents();
 			this.renderPage();
 		},
@@ -48,11 +51,12 @@
 				$("#genderDropdownFlag").attr("checked", null);
 
 			for ( var i = 0; i < this.categories.length; i++ ) {
-				var curGender = this.categories[i],
-					$tr = $('<tr/>', {'class': 'removeable', }),
-					$action = $('<h6/>', {'class': 'actionRemove'}).text('Remove Category');
+				var curGender = this.categories[i];
 				for ( var j = 0; j < curGender.value.length; j++ ){
-					var curItem = curGender.value[j];
+					
+					var curItem = curGender.value[j],
+						$tr = $('<tr/>', {'class': 'removeable', }),
+						$action = $('<h6/>', {'class': 'actionRemove'}).text('Remove Category');
 
 					$tr.append(
 							$('<td/>', {'class': 'categoryValue'}).text("Category Value: "),
@@ -73,8 +77,8 @@
 						event.preventDefault();
 						$tr.remove();
 					});
-					index++;
 					$container.append($tr);
+					index++;
 				}
 			}
 		},

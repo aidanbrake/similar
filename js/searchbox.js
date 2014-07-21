@@ -522,6 +522,15 @@ var Searchbox = $.klass({
 		return null;
 	},
 
+	getCategoriesFromGender: function(gender) {
+		for (var i = self.options.categories.length - 1; i >= 0; i--) {
+			if ( self.options.categories[i].gender == gender )
+				return self.options.categories[i];
+		};
+
+		return {};
+	},
+
 	openDialog:function(img,dataURL){
 		var self=this;
 		var rect = img[0].getBoundingClientRect();
@@ -657,18 +666,22 @@ var Searchbox = $.klass({
 			slideShow2.append(pager2);
 			///////////////////
 
-			if (self.options.genderOptionFlag == "true" || self.options.genderOptionFlag) {
+			if (self.options.genderOptionFlag == "true" || self.options.genderOptionFlag == true) {
 				if ( self.getGenderFromCategory(self.getCurrentCategory()) == 'women') {
+					var curGenderCategory = self.getCategoriesFromGender("women");
 					itemFoundCloseupDivGenderWomen.attr('checked', true);
-					for (var i = 0; i < self.options.categories[1].value.length; i++){
-						var opt = "<option value='" + self.options.categories[1].value[i].id+"'>"+self.options.categories[1].value[i].value+"</option>"
-						closeupDivCategorySelect.append(opt);
+					for (var i = 0; i < curGenderCategory.value.length; i++){
+						// var opt = "<option value='" + curGenderCategory.value[i].id + "'>" + curGenderCategory.value[i].value + "</option>";
+						var $opt = $('<option/>', {'value': curGenderCategory.value[i].id}).text(curGenderCategory.value[i].value);
+						closeupDivCategorySelect.append($opt);
 					}
 				} else {
+					var curGenderCategory = self.getCategoriesFromGender("men");
 					itemFoundCloseupDivGenderMen.attr('checked', true);
-					for (var i = 0; i < self.options.categories[0].value.length; i++){
-						var opt = "<option value='" + self.options.categories[0].value[i].id+"'>"+self.options.categories[0].value[i].value+"</option>"
-						closeupDivCategorySelect.append(opt);
+					for (var i = 0; i < curGenderCategory.value.length; i++){
+						// var opt = "<option value='" + curGenderCategory.value[i].id + "'>" + curGenderCategory.value[i].value + "</option>";
+						var $opt = $('<option/>', {'value': curGenderCategory.value[i].id}).text(curGenderCategory.value[i].value);
+						closeupDivCategorySelect.append($opt);
 					}
 				}
 			}else {
@@ -680,7 +693,7 @@ var Searchbox = $.klass({
 
 				for (var j = 0; j < self.options.categories.length; j++) {
 					for (var i = 0; i < self.options.categories[1].value.length; i++){
-						var opt = "<option value='" + self.options.categories[j].value[i].id+"'>"+self.options.categories[j].value[i].value+"</option>"
+						var opt = "<option value='" + self.options.categories[j].value[i].id + "'>" + self.options.categories[j].value[i].value + "</option>";
 						closeupDivCategorySelect.append(opt);
 					}
 				}
@@ -754,17 +767,18 @@ var Searchbox = $.klass({
 				gridDivCategorySelect = $('<select/>', {'id': 'gridViewCategorySelect', 'class':'categorySelect'}),
 				gridDivLogo = $(document.createElement('a')).addClass('logo').attr({'href':'http://www.cortexica.com/', 'target':'_blank'});
 
-			if (self.options.genderOptionFlag == "true" || self.options.genderOptionFlag) {
+			if (self.options.genderOptionFlag == "true" || self.options.genderOptionFlag == true) {
 				if ( self.getGenderFromCategory(self.getCurrentCategory()) == 'women') {
+					var curGenderCategory = self.getCategoriesFromGender("women");
 					itemFoundGridDivGenderWomen.attr('checked', true);
-					for (var i = 0; i < self.options.categories[1].value.length; i++){
-						var opt = "<option value='" + self.options.categories[1].value[i].id+"'>"+self.options.categories[1].value[i].value+"</option>"
+					for (var i = 0; i < curGenderCategory.value.length; i++){
+						var opt = "<option value='" + curGenderCategory.value[i].id + "'>" + curGenderCategory.value[i].value + "</option>";
 						gridDivCategorySelect.append(opt);
 					}
 				} else {
 					itemFoundGridDivGenderMen.attr('checked', true);
-					for (var i = 0; i < self.options.categories[0].value.length; i++){
-						var opt = "<option value='" + self.options.categories[0].value[i].id+"'>"+self.options.categories[0].value[i].value+"</option>"
+					for (var i = 0; i < curGenderCategory.value.length; i++){
+						var opt = "<option value='" + curGenderCategory.value[i].id + "'>" + curGenderCategory.value[i].value + "</option>";
 						gridDivCategorySelect.append(opt);
 					}
 				}
@@ -984,19 +998,20 @@ var Searchbox = $.klass({
 
 			$('input[name=grid-gender]:radio').change(function(event) {
 				if ($(this).val() == 'men'){
+					var curGenderCatetory = self.getCategoriesFromGender("men");
 					$('#gridViewCategorySelect option').remove();
-					for (var i = 0; i < self.options.categories[0].value.length; i++) {
-						var opt = "<option value='" + self.options.categories[0].value[i].id+"'>"+self.options.categories[0].value[i].value+"</option>"
+					for (var i = 0; i < curGenderCatetory.value.length; i++) {
+						var opt = "<option value='" + curGenderCatetory.value[i].id + "'>" + curGenderCatetory.value[i].value + "</option>";
 						$('#gridViewCategorySelect').append(opt);
 					};
 
 					$('input#closeup-men').click();
 				}
-				else
-				{
+				else {
+					var curGenderCatetory = self.getCategoriesFromGender("women");
 					$tmpGridCategoryOption = $('#gridViewCategorySelect option').remove();
-					for (var i = 0; i < self.options.categories[1].value.length; i++) {
-						var opt = "<option value='" + self.options.categories[1].value[i].id + "'>"+self.options.categories[1].value[i].value+"</option>"
+					for (var i = 0; i < curGenderCatetory.value.length; i++) {
+						var opt = "<option value='" + curGenderCatetory.value[i].id + "'>" + curGenderCatetory.value[i].value + "</option>";
 						$('#gridViewCategorySelect').append(opt);
 					};
 
@@ -1009,19 +1024,20 @@ var Searchbox = $.klass({
 
 			$('input[name=closeup-gender]:radio').change(function(event) {
 				if ($(this).val() == 'men'){
+					var curGenderCatetory = self.getCategoriesFromGender("men");
 					$('#closeupViewCategorySelect option').remove();
-					for (var i = 0; i < self.options.categories[0].value.length; i++) {
-						var opt= "<option value='" + self.options.categories[0].value[i].id + "'>" + self.options.categories[0].value[i].value+"</option>"
+					for (var i = 0; i < curGenderCatetory.value.length; i++) {
+						var opt= "<option value='" + curGenderCatetory.value[i].id + "'>" + curGenderCatetory.value[i].value+"</option>";
 						$('#closeupViewCategorySelect').append(opt);
 					};
 
 					$('input#grid-men').click();
 				}
-				else
-				{
+				else {
+					var curGenderCatetory = self.getCategoriesFromGender("women");
 					$('#closeupViewCategorySelect option').remove();
-					for (var i = 0; i < self.options.categories[1].value.length; i++) {
-						var opt = "<option value='" + self.options.categories[1].value[i].id + "'>" + self.options.categories[1].value[i].value+"</option>"
+					for (var i = 0; i < curGenderCatetory.value.length; i++) {
+						var opt = "<option value='" + curGenderCatetory.value[i].id + "'>" + curGenderCatetory.value[i].value+"</option>"
 						$('#closeupViewCategorySelect').append(opt);
 					};
 
