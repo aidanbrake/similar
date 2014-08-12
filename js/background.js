@@ -25,7 +25,7 @@ chrome.runtime.onMessage.addListener(
 	} else if (request.name == "noChanges"){
 		var data = request.dataURL;
 		return true;
-	} else if (request.method == "getOptionData") {
+	} else if (request.name == "getOptionData") {
 		sendResponse({
 			apiKey: localStorage.getItem("apiKey"),
 			genderOption: localStorage.getItem("genderOption"),

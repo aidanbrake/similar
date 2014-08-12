@@ -111,11 +111,6 @@
 			});
 		},
 
-		removeCategory: function(event) {
-			event.preventDefault();
-			alert("slkdfjsldkjf");
-		},
-
 		restore: function(event) {
 			event.preventDefault();
 			window.option.restoreParam();

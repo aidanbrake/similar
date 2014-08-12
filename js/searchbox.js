@@ -71,11 +71,34 @@ var Searchbox = $.klass({
 
 	updateFromLocalStorage: function() {
 		var self = this;
-		chrome.runtime.sendMessage({method: "getOptionData"}, function(response) {
-			self.options.categories = response.categories || options.categories
-			self.options.apiKey = response.apiKey || options.key
-			self.options.genderOptionFlag = response.genderOption || options.genderOptionFlag
+		chrome.runtime.sendMessage({name: "getOptionData"}, function(response) {
+			self.options.categories = response.categories || options.categories;
+			self.options.apiKey = response.apiKey || options.key;
+			self.options.genderOptionFlag = response.genderOption || options.genderOptionFlag;
+			self.refreshCurrentCategory();
 		});
+	},
+
+	sleep : function(milliseconds) {
+		var start = new Date().getTime();
+		for (var i = 0; i < 1e7; i++) {
+			if ((new Date().getTime() - start) > milliseconds){
+				break;
+			}
+		}
+	},
+
+	refreshCurrentCategory: function() {
+		var categories = this.options.categories;
+		for ( var i = 0; i < categories.length; i++ )
+		{
+			if ( categories[0].value.length > 0 ) {
+				this.currentCategory = categories[0][0];
+				return;
+			}
+		}
+		this.currentCategory = null;
+		return;
 	},
 
 	logger:function (text){
@@ -488,10 +511,12 @@ var Searchbox = $.klass({
 		if (this.dataURL == null) {
 			chrome.runtime.sendMessage({url: img.attr("src"),name:"toDataURL"}, function(response) {
 				if (response.cmd === "toDataURL") {
+					self.updateFromLocalStorage();
 					self.openDialog(img,response.data);
 				}
 			});
 		} else {
+			self.updateFromLocalStorage();
 			self.openDialog(img,this.dataURL);
 		}
 	},
@@ -508,7 +533,7 @@ var Searchbox = $.klass({
 	},
 
 	getGenderFromCategory: function(category) {
-		return this.getGenderFromId(category.id);
+		return (category == undefined) ? null : this.getGenderFromId(category.id);
 	},
 
 	getCategoryFromId: function(id) {
@@ -555,8 +580,6 @@ var Searchbox = $.klass({
 				self.clearWindows()
 			} 
 		});
-
-		this.updateFromLocalStorage();
 
 		self.loadingContainer = $(document.createElement('section'));
 		self.loadingContainer.addClass("loader hidden left");
@@ -1052,8 +1075,14 @@ var Searchbox = $.klass({
 	},
 
 	getCurrentCategory : function() {
-		if( this.currentCategory == null )
-			return this.options.categories[1].value[0];
+		if( this.currentCategory == null ) {
+			if ( this.options.categories[0].value.length > 0 )
+				return this.options.categories[0].value[0];
+			else if ( this.options.categories[1].value.length > 0 )
+				return this.options.categories[1].value[0];
+			else
+				return null;
+		}
 		else
 			return this.currentCategory;
 	},
@@ -1080,6 +1109,15 @@ var Searchbox = $.klass({
 			contentType: false,
 			async : true,
 			success: function(response){
+
+				var id = response["id"];
+				if ( id == -1 )
+				{
+					alert(response["status"]);
+					self.resultContainer.addClass('hidden');
+					self.loadingContainer.addClass('hidden');
+					return;
+				}
 				
 				var data=response["fashions"];
 				if (self.loadingImg!=null)
