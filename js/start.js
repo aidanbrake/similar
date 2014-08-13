@@ -27,24 +27,5 @@ function start(){
 									categories: globalOptions.categories,
 									genderOptionFlag: globalOptions.genderOptionFlag,
 									url: globalOptions.url});
-									//Torqd
-									// "key":"OG46GI345HIJEFBE56970CE8GR3KRLEBHDY4587FR92DBEVN",
-									// "categories" : [
-									// 	{
-									// 		"gender" : "men",
-									// 		"value" : [
-									// 			{"value" : "Men Outer-Wear", "id" : 10010}
-									// 		]
-									// 	},
-									// 	{
-									// 		"gender" : "women",
-									// 		"value" : [
-									// 			{"value" : "Women Shoes", "id" : 10011}
-												
-									// 		]
-									// 	}
-									// ],
-									// genderOptionFlag: false,
-									// url:"http://apifs.cortexica.com/api/searchsimilar"} );
 		});
 }
