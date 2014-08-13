@@ -14,7 +14,7 @@
 			// localStorage.setItem("genderOption", globalOptions.genderOptionFlag);
 
 			this.categories = JSON.parse(localStorage.getItem("categories")) || globalOptions.categories;
-			this.apiKey = localStorage.getItem("apiKey") || globalOptions.key;
+			this.apiKey = localStorage.getItem("apiKey") || globalOptions.apiKey;
 			this.genderDropdownFlag = localStorage.getItem("genderOption") || globalOptions.genderOptionFlag;
 			this.initEvents();
 			this.renderPage();
@@ -23,7 +23,7 @@
 
 		restoreParam: function() {
 			this.categories = globalOptions.categories;
-			this.apiKey = globalOptions.key;
+			this.apiKey = globalOptions.apiKey;
 			this.genderDropdownFlag = globalOptions.genderOptionFlag;
 
 			localStorage.setItem("categories", JSON.stringify(this.categories));
