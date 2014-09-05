@@ -1104,7 +1104,6 @@ var Searchbox = $.klass({
 			type: "POST",
 			url: self.options.url,
 			data: params,
-			//crossDomain: true,
 			processData:false,
 			contentType: false,
 			async : true,
@@ -1113,10 +1112,12 @@ var Searchbox = $.klass({
 				var id = response["id"];
 				if ( id == -1 )
 				{
-					alert(response["status"]);
-					self.resultContainer.addClass('hidden');
-					self.loadingContainer.addClass('hidden');
-					return;
+					console.log(response.status);
+					console.log("Please input the correct category id.");
+					// alert(response["status"]);
+					// self.resultContainer.addClass('hidden');
+					// self.loadingContainer.addClass('hidden');
+					// return;
 				}
 				
 				var data=response["fashions"];
@@ -1209,6 +1210,9 @@ var Searchbox = $.klass({
 				self.initGridList();
 				self.resultContainer.removeClass('hidden');
 
+			},
+			error: function(response) {
+				console.log(response);
 			},
 			dataType: "json"
 		});
