@@ -72,9 +72,9 @@ var Searchbox = $.klass({
 	updateFromLocalStorage: function() {
 		var self = this;
 		chrome.runtime.sendMessage({name: "getOptionData"}, function(response) {
-			self.options.categories = response.categories || options.categories;
-			self.options.apiKey = response.apiKey || options.apiKey;
-			self.options.genderOptionFlag = response.genderOption || options.genderOptionFlag;
+			self.options.categories = response.categories || self.options.categories;
+			self.options.apiKey = response.apiKey || self.options.apiKey;
+			self.options.genderOptionFlag = response.genderOption || self.options.genderOptionFlag;
 			self.refreshCurrentCategory();
 		});
 	},
@@ -1091,7 +1091,7 @@ var Searchbox = $.klass({
 		var self=this;
 	
 		var params = new FormData()
-		params.append( "ApiKey", this.options.apiKey); // asos live
+		params.append( "ApiKey", this.options.key); // asos live
 		params.append( "Longitude", "0.00");
 		params.append( "Latitude", "0.84");
 		params.append( "DeviceName", "TestDrive");
