@@ -131,7 +131,8 @@ var Searchbox = $.klass({
 
 	initGridList:function() {
 		self = this;
-		if ( self.gridItems != null && self.getCurrentCategory().id == $('#gridViewCategorySelect').val() )
+		// if ( self.gridItems != null && self.getCurrentCategory().id == $('#gridViewCategorySelect').val() )
+		if ( self.getCurrentCategory().id == $('#gridViewCategorySelect').val() )
 		{
 			// jQuery(document).ready(function($){
 
@@ -563,7 +564,7 @@ var Searchbox = $.klass({
 		var scrollY = window.pageYOffset;
 		var posX = scrollX+rect.right;
 		var posY = scrollY+rect.top;
-		var curCategory = this.currentCategory;
+		var curCategory = self.getCurrentCategory();
 
 		var dialogDiv = $(document.createElement('div'));
 		dialogDiv.css("position","absolute");
@@ -842,7 +843,7 @@ var Searchbox = $.klass({
 				var closeupResult = [];
 				var itemClassName = "cortexicaCloseupImageArea" + $('#closeupViewCategorySelect').val();
 
-				self.currentCategory = self.getCategoryFromId($('#closeupViewCategorySelect').val());
+				localStorage.setItem("currentCategoryId", $('#closeupViewCategorySelect').val());
 
 				for(var i = 0; i < self.gridItems.length; i++) {
 					var curItem = self.items[i];
@@ -933,7 +934,7 @@ var Searchbox = $.klass({
 				var itemClassName = "cortexicaGridImageArea" + $('#gridViewCategorySelect').val();
 
 				//--	Setting current Category in global
-				self.currentCategory = self.getCategoryFromId($('#gridViewCategorySelect').val());
+				localStorage.setItem("currentCategoryId", $('#gridViewCategorySelect').val());
 				//----
 
 				for(var i = 0; i < self.gridItems.length; i++) {
@@ -983,7 +984,7 @@ var Searchbox = $.klass({
 			this.gridItems = [];
 		}
 
-		self.getImages(slider, dataURL, self.getCurrentCategory());
+		self.getImages(slider, dataURL, curCategory);
 		
 		
 
@@ -1075,7 +1076,12 @@ var Searchbox = $.klass({
 	},
 
 	getCurrentCategory : function() {
-		if( this.currentCategory == null ) {
+		var curCategory = this.getCategoryFromId(localStorage.getItem("currentCategoryId"));
+		if (curCategory != null) {
+			this.currentCategory = curCategory;
+			return curCategory;
+		}
+		else if( this.currentCategory == null ) {
 			if ( this.options.categories[0].value.length > 0 )
 				return this.options.categories[0].value[0];
 			else if ( this.options.categories[1].value.length > 0 )
@@ -1091,7 +1097,7 @@ var Searchbox = $.klass({
 		var self=this;
 	
 		var params = new FormData()
-		params.append( "ApiKey", this.options.key); // asos live
+		params.append( "ApiKey", this.options.apiKey); // asos live
 		params.append( "Longitude", "0.00");
 		params.append( "Latitude", "0.84");
 		params.append( "DeviceName", "TestDrive");
@@ -1206,13 +1212,18 @@ var Searchbox = $.klass({
 				}
 
 				self.currentIndexOfCategory = self.currentIndexOfCategory + 1;
+				self.resultContainer.removeClass('hidden');
 				self.initCarousel(false);
 				self.initGridList();
-				self.resultContainer.removeClass('hidden');
 
 			},
 			error: function(response) {
 				console.log(response);
+				alert(response.statusText);
+				// self.loadingContainer.addClass("hidden");
+
+				self.loadingContainer.remove();
+				self.resultContainer.removeClass("hidden");
 			},
 			dataType: "json"
 		});
